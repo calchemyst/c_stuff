@@ -77,9 +77,8 @@ int htoi(char s[]) {
             if (s[i] >= 'a' && s[i] <= 'f') {
                 s[i] -= 32;
             }
-        } else if ((s[i] > '9' && s[i] < 'A')) {
-            printf("Not a hexadecimal.\n");
-            return 0;
+        } else if (s[i] > '9') {
+            return -1;
         }
         n = n + s[i] - '0';
     }
