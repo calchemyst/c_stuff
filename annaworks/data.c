@@ -11,17 +11,27 @@
 #define THELINE 80
 
 int htoi(char s[]);
-char itoh(int i);
 float convert(float fahr);
 int fetchline(char line[], int lim);
 void reverse(char to[], char from[], int len);
 void copy(char to[], char from[]);
+void squeeze(char s1[], char s2[]);
+void squeezehelper(char s[], int c);
 
 int main() {
-    char s[] = { '2', 'A', 'F', '3'};
+    char s[] = "2AF3";
+    char h[] = "hokkahokka";
+    char h2[] = "0FF3";
+    char s1[] = "hotdoghot";
+    char s2[] = "dg";
     int i = htoi(s);
+    int j = htoi(h);
+    int k = htoi(h2);
+    squeeze(s1, s2);
+    printf("%s\n", s1);
     printf("Answer is %d\n", i);
-    
+    printf("Answer is %d\n", j);
+    printf("Answer is %d\n", k);
 }
 
 
@@ -54,21 +64,19 @@ void copy(char to[], char from[]) {
 
 int htoi(char s[]) {
     int i, n;
-    
     n = 0;
-    for (i = 0; (s[i] >= '0' && s[i] <= '9')
-                 || (s[i] >= 'A' && s[i] <= 'F')
-                 || (s[i] >= 'a' && s[i] <= 'f'); ++i) {
+    for (i = 0; s[i] != '\0'; ++i) {
         n = 16*n;
-        if (s[i] >= 'A' && s[i] <= 'F') {
+        if ((s[i] >= 'A' && s[i] <= 'F') || (s[i] >= 'a' && s[i] <= 'f')) {
             s[i] = s[i] -7 ;
-        } else if (s[i] >= 'a' && s[i] <= 'f') {
-            // Convert to upper case first.
-            s[i] = s[i] - 32;
-            s[i] = s[i] - 7;
+            if (s[i] >= 'a' && s[i] <= 'f') {
+                s[i] = s[i] - 32;
+            }
+        } else if (s[i] >= '9') {
+            printf("Not a hexadecimal.\n");
+            return 0;
         }
         n = n + s[i] - '0';
-     
     }
     return n;
 }
@@ -76,4 +84,20 @@ int htoi(char s[]) {
 
 float convert(float fahr) {
     return (5.0/9.0) * (fahr - 32.0);
+}
+
+void squeezehelper(char s[], int c) {
+    int i, j;
+    for (i = j = 0; s[i] != '\0'; i++) {
+       if (s[i] != c)
+           s[j++] = s[i];
+    }
+    s[j] = '\0';
+}
+
+void squeeze(char s1[], char s2[]) {
+    int i;
+    for (i = 0; s2[i] != '\0'; i++) {
+        squeezehelper(s1, s2[i]);
+    }
 }
