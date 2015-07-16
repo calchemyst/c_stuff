@@ -7,8 +7,14 @@
 //
 
 #include <stdio.h>
+#include <string.h>     /* strcat */
+#include <stdlib.h>     /* strtol */
 #define MAXLINE 1000
 #define THELINE 80
+#define NUM_OF_BITS 8
+
+
+
 
 int htoi(char s[]);
 float convert(float fahr);
@@ -19,26 +25,78 @@ void squeeze(char s1[], char s2[]);
 void squeezehelper(char s[], int c);
 int any(char s1[], char s2[]);
 int anyhelper(char s[], int c);
-
-int main() {
-    char s[] = "2AF3";
-    char h[] = "hokkahokka";
-    char h2[] = "0FF3";
-    char h3[] = "k";
-    char s1[] = "hotdoghot";
-    char s2[] = "dg";
-    int i = htoi(s);
-    int j = htoi(h);
-    int k = htoi(h2);
-    int k1 = any(h, h3);
-    printf("Found at %d\n", k1);
-    squeeze(s1, s2);
-    printf("%s\n", s1);
-    printf("Answer is %d\n", i);
-    printf("Answer is %d\n", j);
-    printf("Answer is %d\n", k);
+unsigned multiply(unsigned x, unsigned y);
+unsigned add(unsigned x, unsigned y);
+const char *byte_to_binary(int x)
+{
+    static char b[9];
+    b[0] = '\0';
+    
+    int z;
+    for (z = 128; z > 0; z >>= 1)
+    {
+        strcat(b, ((x & z) == z) ? "1" : "0");
+    }
+    
+    return b;
 }
 
+int main() {
+
+    printf("%s\n", byte_to_binary(add(1, 1)));
+
+}
+
+unsigned add(unsigned x, unsigned y) {
+    int i;
+    short a = 0;
+    short mask = 1;
+    short carry_bit = 0;
+    for (i = 0; i < NUM_OF_BITS; i++) {
+        short x_bit = x & mask;
+        short y_bit = y & mask;
+        short cool_bit;
+        if ((x_bit & y_bit) & carry_bit){
+            // Might be a carry situation.
+            if (x_bit & y_bit) {
+                carry_bit = mask << 1;
+                cool_bit = x_bit & y_bit;
+            } else {
+                cool_bit = x_bit ^ y_bit;
+                carry_bit = 0;
+            }
+        } else if (x_bit & y_bit) {
+            // Definitely need to create a carry bit here.
+            carry_bit = mask << 1;
+            cool_bit = x_bit ^ y_bit;
+        } else {
+            cool_bit = x_bit ^ y_bit;
+        }
+        a = a | cool_bit;
+        mask <<= 1;
+    }
+    a = a | carry_bit;
+    return a;
+}
+
+unsigned multiply(unsigned x, unsigned y) {
+    int i;
+    short mask = 1;
+
+    short z;
+    short z2, y_bit;
+    y_bit = y & mask;
+    z = x & y_bit;
+    for (i = 0; i < NUM_OF_BITS; i++) {
+        mask <<= 1;
+        y_bit = y & mask;
+        z2 = x & y_bit;
+        z2 <<= 1;
+
+
+    }
+    return z;
+}
 
 void reverse(char to[], char from[], int len) {
     int i, j;
