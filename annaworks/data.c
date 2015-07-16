@@ -41,7 +41,8 @@ const char *byte_to_binary(int x)
 }
 
 int main() {
-    printf("%s\n", byte_to_binary(add(2, 2)));
+    printf("%s\n", byte_to_binary(-1));
+    printf("%s\n", byte_to_binary(add(-1, 2)));
 
 }
 
@@ -54,10 +55,10 @@ unsigned add(unsigned x, unsigned y) {
         unsigned x_bit = x & mask;
         unsigned y_bit = y & mask;
         unsigned cool_bit;
-        if (x_bit & y_bit){
+        if ((x_bit & y_bit) | (x_bit & carry_bit) | (y_bit & carry_bit)){
             if(carry_bit) {
-                carry_bit = mask << 1;
-                cool_bit = x_bit & y_bit;
+               carry_bit = mask << 1;
+               cool_bit = x_bit & y_bit;
             } else {
                carry_bit = mask << 1;
                cool_bit = x_bit ^ y_bit;
