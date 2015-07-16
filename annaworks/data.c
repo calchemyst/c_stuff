@@ -11,7 +11,7 @@
 #include <stdlib.h>     /* strtol */
 #define MAXLINE 1000
 #define THELINE 80
-#define NUM_OF_BITS 8
+#define NUM_OF_BITS 32
 
 
 
@@ -26,7 +26,7 @@ void squeezehelper(char s[], int c);
 int any(char s1[], char s2[]);
 int anyhelper(char s[], int c);
 unsigned multiply(unsigned x, unsigned y);
-unsigned add(unsigned x, unsigned y);
+int add(int x, int y);
 const char *byte_to_binary(int x)
 {
     static char b[9];
@@ -43,35 +43,34 @@ const char *byte_to_binary(int x)
 
 int main() {
 
-    printf("%s\n", byte_to_binary(add(1, 1)));
+    printf("%s\n", byte_to_binary(add(10, 10)));
 
 }
 
-unsigned add(unsigned x, unsigned y) {
+int add(int x, int y) {
     int i;
-    short a = 0;
-    short mask = 1;
-    short carry_bit = 0;
+    int a = 0;
+    int mask = 1;
+    int carry_bit = 0;
     for (i = 0; i < NUM_OF_BITS; i++) {
-        short x_bit = x & mask;
-        short y_bit = y & mask;
-        short cool_bit;
-        if ((x_bit & y_bit) & carry_bit){
+        int x_bit = x & mask;
+        int y_bit = y & mask;
+        int cool_bit;
+        if (x_bit & y_bit){
             // Might be a carry situation.
-            if (x_bit & y_bit) {
-                carry_bit = mask << 1;
-                cool_bit = x_bit & y_bit;
+            if(carry_bit) {
+                    carry_bit = mask << 1;
+                    cool_bit = x_bit & y_bit;
             } else {
-                cool_bit = x_bit ^ y_bit;
-                carry_bit = 0;
+               carry_bit = mask << 1;
+               cool_bit = x_bit ^ y_bit;
             }
-        } else if (x_bit & y_bit) {
-            // Definitely need to create a carry bit here.
-            carry_bit = mask << 1;
-            cool_bit = x_bit ^ y_bit;
         } else {
             cool_bit = x_bit ^ y_bit;
+            a = a | carry_bit;
+            carry_bit = 0;
         }
+        printf("a = %s\n", byte_to_binary(a));
         a = a | cool_bit;
         mask <<= 1;
     }
