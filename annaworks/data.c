@@ -25,8 +25,7 @@ void squeeze(char s1[], char s2[]);
 void squeezehelper(char s[], int c);
 int any(char s1[], char s2[]);
 int anyhelper(char s[], int c);
-unsigned multiply(unsigned x, unsigned y);
-int add(int x, int y);
+unsigned add(unsigned x, unsigned y);
 const char *byte_to_binary(int x)
 {
     static char b[9];
@@ -42,25 +41,23 @@ const char *byte_to_binary(int x)
 }
 
 int main() {
-
-    printf("%s\n", byte_to_binary(add(10, 10)));
+    printf("%s\n", byte_to_binary(add(2, 2)));
 
 }
 
-int add(int x, int y) {
-    int i;
-    int a = 0;
-    int mask = 1;
-    int carry_bit = 0;
+unsigned add(unsigned x, unsigned y) {
+    unsigned i;
+    unsigned a = 0;
+    unsigned mask = 1;
+    unsigned carry_bit = 0;
     for (i = 0; i < NUM_OF_BITS; i++) {
-        int x_bit = x & mask;
-        int y_bit = y & mask;
-        int cool_bit;
+        unsigned x_bit = x & mask;
+        unsigned y_bit = y & mask;
+        unsigned cool_bit;
         if (x_bit & y_bit){
-            // Might be a carry situation.
             if(carry_bit) {
-                    carry_bit = mask << 1;
-                    cool_bit = x_bit & y_bit;
+                carry_bit = mask << 1;
+                cool_bit = x_bit & y_bit;
             } else {
                carry_bit = mask << 1;
                cool_bit = x_bit ^ y_bit;
@@ -70,31 +67,11 @@ int add(int x, int y) {
             a = a | carry_bit;
             carry_bit = 0;
         }
-        printf("a = %s\n", byte_to_binary(a));
         a = a | cool_bit;
         mask <<= 1;
     }
     a = a | carry_bit;
     return a;
-}
-
-unsigned multiply(unsigned x, unsigned y) {
-    int i;
-    short mask = 1;
-
-    short z;
-    short z2, y_bit;
-    y_bit = y & mask;
-    z = x & y_bit;
-    for (i = 0; i < NUM_OF_BITS; i++) {
-        mask <<= 1;
-        y_bit = y & mask;
-        z2 = x & y_bit;
-        z2 <<= 1;
-
-
-    }
-    return z;
 }
 
 void reverse(char to[], char from[], int len) {
