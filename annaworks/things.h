@@ -18,6 +18,7 @@ int anyhelper(char s[], int c);
 unsigned add(unsigned x, unsigned y);
 unsigned multiply(unsigned x, unsigned y);
 unsigned divide(unsigned x, unsigned y);
+unsigned longdivide(unsigned x, unsigned y);
 
 
 void reverse(char to[], char from[], int len) {

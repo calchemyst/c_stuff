@@ -27,7 +27,7 @@ const char *byte_to_binary(int x)
 
 
 int main() {
-    printf("%d\n", divide(7, 2));
+    printf("%d\n", longdivide(100, 3));
 }
 
 
@@ -47,6 +47,26 @@ unsigned divide(unsigned x, unsigned y) {
         printf("Modulo was %d\n", z);
     }
     return i;
+}
+
+unsigned longdivide(unsigned x, unsigned y) {
+    int i;
+    unsigned a = 0;
+    unsigned z = 0;
+    unsigned mask = 1;
+    unsigned carry_bit = 0;
+    for (i = 0; i < NUM_OF_BITS; i++) {
+        unsigned x_bit = x & mask;
+        while (a <= y) {
+            a = a | x_bit;
+            mask <<= 1;
+            x_bit = x & mask;
+        }
+        if (a == y) {
+            z = z | 
+        }
+
+    }
 }
 
 
