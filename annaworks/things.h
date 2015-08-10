@@ -17,7 +17,7 @@ int any(char s1[], char s2[]);
 int anyhelper(char s[], int c);
 unsigned add(unsigned x, unsigned y);
 unsigned multiply(unsigned x, unsigned y);
-unsigned divide(unsigned x, unsigned y);
+int * divide(unsigned x, unsigned y);
 unsigned longdivide(unsigned x, unsigned y);
 
 

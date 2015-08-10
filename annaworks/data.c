@@ -11,62 +11,57 @@
 #include <stdlib.h>
 #include "things.h"
 
-const char *byte_to_binary(int x)
-{
-    static char b[9];
-    b[0] = '\0';
-    
-    int z;
-    for (z = 128; z > 0; z >>= 1)
-    {
-        strcat(b, ((x & z) == z) ? "1" : "0");
-    }
-    
-    return b;
-}
-
-
 int main() {
-    printf("%d\n", longdivide(100, 3));
+    printf("%d\n", longdivide(100, 4));
 }
 
 
-unsigned divide(unsigned x, unsigned y) {
+int * divide(unsigned x, unsigned y) {
     int i = 0;
+    int * answer = malloc(sizeof(int)*2);
     unsigned z = x;
     unsigned a = 0;
     unsigned mask = 1;
-    if (y == 1) {
-        return x;
+    if (x < y) {
+        answer[0] = 0;
+        answer[1] = x;
+        return answer;
+    } else if (y == 1) {
+        answer[0] = x;
+        answer[1] = 0;
+        return answer;
     }
     while (z >= y) {
         z = add(z, -y);
         i++;
     }
-    if (z!=0 ) {
-        printf("Modulo was %d\n", z);
-    }
-    return i;
+    answer[0] = i;
+    answer[1] = z;
+    return answer;
 }
 
+
 unsigned longdivide(unsigned x, unsigned y) {
-    int i;
     unsigned a = 0;
     unsigned z = 0;
     unsigned mask = 1;
-    unsigned carry_bit = 0;
-    for (i = 0; i < NUM_OF_BITS; i++) {
-        unsigned x_bit = x & mask;
-        while (a <= y) {
-            a = a | x_bit;
-            mask <<= 1;
-            x_bit = x & mask;
-        }
-        if (a == y) {
-            z = z | 
-        }
 
+    for (int i = 0; i < NUM_OF_BITS; i++) {
+        int * divider;
+        unsigned cool_bit = x & mask;
+        a = a | cool_bit;
+        divider = divide(a, y);
+        // Set z to the quotient.
+        z = z | divider[0];
+        // Set a to the remainder.
+        a = divider[1];
+        a <<= 1;
+        printf("a = %d\n", a);
+        free(divider);
+        mask << 1;
     }
+
+    return z;
 }
 
 
