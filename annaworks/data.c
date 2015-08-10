@@ -7,25 +7,10 @@
 //
 
 #include <stdio.h>
-#include <string.h>     /* strcat */
-#include <stdlib.h>     /* strtol */
-#define MAXLINE 1000
-#define THELINE 80
-#define NUM_OF_BITS 32
+#include <string.h>
+#include <stdlib.h>
+#include "things.h"
 
-
-
-
-int htoi(char s[]);
-float convert(float fahr);
-int fetchline(char line[], int lim);
-void reverse(char to[], char from[], int len);
-void copy(char to[], char from[]);
-void squeeze(char s1[], char s2[]);
-void squeezehelper(char s[], int c);
-int any(char s1[], char s2[]);
-int anyhelper(char s[], int c);
-unsigned add(unsigned x, unsigned y);
 const char *byte_to_binary(int x)
 {
     static char b[9];
@@ -40,14 +25,33 @@ const char *byte_to_binary(int x)
     return b;
 }
 
-int main() {
-    printf("%s\n", byte_to_binary(-1));
-    printf("%s\n", byte_to_binary(add(-1, 2)));
 
+int main() {
+    printf("%d\n", divide(7, 2));
 }
 
+
+unsigned divide(unsigned x, unsigned y) {
+    int i = 0;
+    unsigned z = x;
+    unsigned a = 0;
+    unsigned mask = 1;
+    if (y == 1) {
+        return x;
+    }
+    while (z >= y) {
+        z = add(z, -y);
+        i++;
+    }
+    if (z!=0 ) {
+        printf("Modulo was %d\n", z);
+    }
+    return i;
+}
+
+
 unsigned add(unsigned x, unsigned y) {
-    unsigned i;
+    int i;
     unsigned a = 0;
     unsigned mask = 1;
     unsigned carry_bit = 0;
@@ -57,11 +61,11 @@ unsigned add(unsigned x, unsigned y) {
         unsigned cool_bit;
         if ((x_bit & y_bit) | (x_bit & carry_bit) | (y_bit & carry_bit)){
             if(carry_bit) {
-               carry_bit = mask << 1;
-               cool_bit = x_bit & y_bit;
+                carry_bit = mask << 1;
+                cool_bit = x_bit & y_bit;
             } else {
-               carry_bit = mask << 1;
-               cool_bit = x_bit ^ y_bit;
+                carry_bit = mask << 1;
+                cool_bit = x_bit ^ y_bit;
             }
         } else {
             cool_bit = x_bit ^ y_bit;
@@ -75,54 +79,20 @@ unsigned add(unsigned x, unsigned y) {
     return a;
 }
 
-void reverse(char to[], char from[], int len) {
-    int i, j;
-    i = len -1;
-    j = 0;
-    while((to[j] = from[i]) != '\0') {
-        --i;
-        ++j;
-    }
-}
-
-int fetchline(char s[], int lim) {
-    int c, i;
-    
-    for (i = 0; i < lim -1 && (c = getchar()) != EOF && c!= '\n'; ++i)
-        s[i] = c;
-    s[i] = '\0';
-    return i;
-}
-
-void copy(char to[], char from[]) {
-    int i ;
-    
-    i = 0;
-    while((to[i] = from[i]) != '\0')
-        ++i;
-}
-
-int htoi(char s[]) {
-    int i, n;
-    n = 0;
-    for (i = 0; s[i] != '\0'; ++i) {
-        n = 16*n;
-        if ((s[i] >= 'A' & s[i] <= 'f') && !(s[i] > 'F' && s[i] < 'a')) {
-            s[i] -= 7 ;
-            if (s[i] >= 'a' && s[i] <= 'f') {
-                s[i] -= 32;
-            }
-        } else if (s[i] > '9') {
-            return -1;
+unsigned multiply(unsigned x, unsigned y) {
+    unsigned j;
+    unsigned total = 0;
+    unsigned y_mask = 1;
+    unsigned y_bit;
+    for (j = 0; j < NUM_OF_BITS; j++) {
+        y_bit = y & y_mask;
+        if (y_bit) {
+            total = add(x, total);
         }
-        n = n + s[i] - '0';
+        x <<=1;
+        y_mask <<=1;
     }
-    return n;
-}
-
-
-float convert(float fahr) {
-    return (5.0/9.0) * (fahr - 32.0);
+    return total;
 }
 
 void squeezehelper(char s[], int c) {
@@ -163,3 +133,4 @@ int anyhelper(char s[], int c) {
     }
     return k;
 }
+
